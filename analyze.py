@@ -29,7 +29,7 @@ def prompt_user(prompt: str):
     print(f'{prompt}\n→ ', end='')
     ansi_faint()
 
-def input_mj_labels() -> set[str]:
+def input_mj_labels() -> list[set[str]]:
     prompt_user('Paste Midjourney\'s descriptions and press return.')
     descriptions = list[str]()
     while len(descriptions) < 4:
@@ -37,7 +37,7 @@ def input_mj_labels() -> set[str]:
         if len(inp) == 0: continue
         descriptions.append(normalize(inp))
     ansi_reset()
-    return find_labels(' '.join(descriptions))
+    return [find_labels(desc) for desc in descriptions]
 
 def input_human_labels() -> set[str]:
     labels = set()
@@ -50,7 +50,7 @@ def input_human_labels() -> set[str]:
 def query_mj_desc(image_path: str):
     subprocess.run([describe_exe, image_path], stderr=subprocess.DEVNULL)
 
-def get_all_labels(image_path: str) -> tuple[set[str], set[str]]:
+def get_all_labels(image_path: str) -> tuple[list[set[str]], set[str]]:
     query_mj_desc(image_path)
     mj = input_mj_labels()
     human = input_human_labels()
@@ -63,7 +63,9 @@ if __name__ == '__main__':
 
     with open(os.path.join(args.directory, 'labels.csv'), 'w') as fp:
         writer = csv.writer(fp, delimiter=';')
-        writer.writerow(['id', 'labels_mj', 'labels_human'])
+        writer.writerow([
+            'id', 'labels_mj1', 'labels_mj2', 'labels_mj3', 'labels_mj4', 'labels_human'
+        ])
         images = sorted([
             int(re.sub(r'^(\d+)\.png$', r'\1', img))
             for img in os.listdir(args.directory)
@@ -74,4 +76,4 @@ if __name__ == '__main__':
             print(f'Labelling image {i + 1}/{len(images)}')
             ansi_reset()
             mj, human = get_all_labels(os.path.join(args.directory, f'{img}.png'))
-            writer.writerow([img, ','.join(mj), ','.join(human)])
+            writer.writerow([img] + [','.join(l) for l in mj + [human]])
