@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+import argparse
+import csv
 import os
 import re
 import subprocess
@@ -55,3 +59,17 @@ def get_all_labels(image_path: str) -> tuple[set[str], set[str]]:
     mj = input_mj_labels()
     human = input_human_labels()
     return (mj, human)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser('Analyze dataset of Midjourney images')
+    parser.add_argument('directory', help='directory of images to analyze')
+    args = parser.parse_args()
+
+    with open(os.path.join(args.directory, 'labels.csv'), 'w') as fp:
+        writer = csv.writer(fp, delimiter=';')
+        writer.writerow(['id', 'labels_mj', 'labels_human'])
+        for img in os.listdir(args.directory):
+            if not img.endswith('.png'): continue
+            img_id = re.sub(r'^(\d+)\.png$', r'\1', img)
+            mj, human = get_all_labels(os.path.join(args.directory, img))
+            writer.writerow([img_id, ','.join(mj), ','.join(human), mj == human])
