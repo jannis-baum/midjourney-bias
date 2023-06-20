@@ -48,13 +48,9 @@ def input_human_labels() -> set[str]:
     return labels
 
 def query_mj_desc(image_path: str):
-    ansi_bold()
-    print(f'Labelling image {image_path}')
-    ansi_reset()
     subprocess.run([describe_exe, image_path], stderr=subprocess.DEVNULL)
 
 def get_all_labels(image_path: str) -> tuple[set[str], set[str]]:
-    ansi_clear()
     query_mj_desc(image_path)
     mj = input_mj_labels()
     human = input_human_labels()
@@ -68,8 +64,14 @@ if __name__ == '__main__':
     with open(os.path.join(args.directory, 'labels.csv'), 'w') as fp:
         writer = csv.writer(fp, delimiter=';')
         writer.writerow(['id', 'labels_mj', 'labels_human'])
-        for img in os.listdir(args.directory):
-            if not img.endswith('.png'): continue
-            img_id = re.sub(r'^(\d+)\.png$', r'\1', img)
-            mj, human = get_all_labels(os.path.join(args.directory, img))
-            writer.writerow([img_id, ','.join(mj), ','.join(human)])
+        images = sorted([
+            int(re.sub(r'^(\d+)\.png$', r'\1', img))
+            for img in os.listdir(args.directory)
+            if img.endswith('.png')
+        ])
+        for i, img in enumerate(images):
+            ansi_clear(); ansi_bold()
+            print(f'Labelling image {i + 1}/{len(images)}')
+            ansi_reset()
+            mj, human = get_all_labels(os.path.join(args.directory, f'{img}.png'))
+            writer.writerow([img, ','.join(mj), ','.join(human)])
