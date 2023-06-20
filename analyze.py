@@ -72,4 +72,4 @@ if __name__ == '__main__':
             if not img.endswith('.png'): continue
             img_id = re.sub(r'^(\d+)\.png$', r'\1', img)
             mj, human = get_all_labels(os.path.join(args.directory, img))
-            writer.writerow([img_id, ','.join(mj), ','.join(human), mj == human])
+            writer.writerow([img_id, ','.join(mj), ','.join(human)])
