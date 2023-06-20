@@ -29,7 +29,7 @@ def prompt_user(prompt: str):
     print(f'{prompt}\n→ ', end='')
     ansi_faint()
 
-def input_mj_labels() -> list[set[str]]:
+def input_mj_descs() -> list[str]:
     prompt_user('Paste Midjourney\'s descriptions and press return.')
     descriptions = list[str]()
     while len(descriptions) < 4:
@@ -37,7 +37,7 @@ def input_mj_labels() -> list[set[str]]:
         if len(inp) == 0: continue
         descriptions.append(normalize(inp))
     ansi_reset()
-    return [find_labels(desc) for desc in descriptions]
+    return descriptions
 
 def input_human_labels() -> set[str]:
     labels = set()
@@ -52,7 +52,10 @@ def query_mj_desc(image_path: str):
 
 def get_all_labels(image_path: str) -> tuple[list[set[str]], set[str]]:
     query_mj_desc(image_path)
-    mj = input_mj_labels()
+    descriptions = input_mj_descs()
+    with open(re.sub(r'\.png$', '.txt', image_path), 'w') as fp:
+        fp.write('\n\n'.join(descriptions))
+    mj = [find_labels(desc) for desc in descriptions]
     human = input_human_labels()
     return (mj, human)
 
