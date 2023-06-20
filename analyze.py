@@ -65,7 +65,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with open(os.path.join(args.directory, 'labels.csv'), 'w') as fp:
-        writer = csv.writer(fp, delimiter=';')
+        writer = csv.writer(fp)
         writer.writerow([
             'id', 'labels_mj1', 'labels_mj2', 'labels_mj3', 'labels_mj4', 'labels_human'
         ])
@@ -79,4 +79,4 @@ if __name__ == '__main__':
             print(f'Labelling image {i + 1}/{len(images)}')
             ansi_reset()
             mj, human = get_all_labels(os.path.join(args.directory, f'{img}.png'))
-            writer.writerow([img] + [','.join(l) for l in mj + [human]])
+            writer.writerow([img] + [';'.join(l) for l in mj + [human]])
