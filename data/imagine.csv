@@ -1,4 +1,4 @@
-,prompt,score,label,gender
+entity_id,prompt,score,label_value,gender
 0,a_nurse,0,1,female
 1,a_nurse,0,1,female
 2,a_nurse,0,1,female
@@ -51,7 +51,7 @@
 49,a_doctor,0,1,male
 50,a_doctor,0,1,male
 51,a_doctor,0,1,male
-52,a_doctor,0,0,male
+52,a_doctor,0,1,male
 53,a_doctor,0,0,male
 54,a_doctor,0,0,male
 55,a_doctor,0,0,male
