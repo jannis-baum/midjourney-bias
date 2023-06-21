@@ -37,7 +37,18 @@ def datasource(arg: str) -> tuple[str, str, float]:
         raise argparse.ArgumentTypeError('Data source must be `souce_file:protected_label:expected_proportion`')
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('Prepare dataset to evaluate Midjourney\'s `imagine`')
+    parser = argparse.ArgumentParser('imagine_set',
+         formatter_class=argparse.RawDescriptionHelpFormatter,
+         description='''
+Prepare dataset to evaluate Midjourney\'s `imagine`.
+
+Creates a CSV file with rows sorted so that protected individuals appear first
+for each prompt and columns as follows.
+
+- id: integer for individual 0 to n,
+- score: 1 if generated individual is in protected group, 0 if not
+- label: 1 for first `expected_proportion`% of rows for each prompt, then equal to score
+- gender: human-labelled gender''')
     parser.add_argument('sources', type=datasource, nargs='+',
         help='Data source in the form of `souce_file:protected_label:expected_proportion`'
     )
