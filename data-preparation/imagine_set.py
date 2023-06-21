@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
+
+import argparse
 import os
 import re
+
 import pandas as pd
 
 def set_from(path: str, protected_label: str, expected_proportion: float) -> pd.DataFrame:
@@ -17,5 +21,31 @@ def set_from(path: str, protected_label: str, expected_proportion: float) -> pd.
         # assume prompt is filename of csv
         'prompt': [re.sub(r'\.csv$', '', os.path.basename(path))] * len(df),
         'score': scores,
-        'label': labels
+        'label': labels,
+        'gender': df['labels_human']
     })
+
+# argparse type
+def datasource(arg: str) -> tuple[str, str, float]:
+    try:
+        splits = arg.split(':')
+        source, protected_label = map(str, splits[:2])
+        expected_proportion = float(splits[2])
+        assert 0 <= expected_proportion <= 1
+        return source, protected_label, expected_proportion
+    except:
+        raise argparse.ArgumentTypeError('Data source must be `souce_file:protected_label:expected_proportion`')
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser('Prepare dataset to evaluate Midjourney\'s `imagine`')
+    parser.add_argument('sources', type=datasource, nargs='+',
+        help='Data source in the form of `souce_file:protected_label:expected_proportion`'
+    )
+    parser.add_argument('--out', '-o', help='Output CSV file', default='imagine.csv')
+    args = parser.parse_args()
+
+    df = pd.concat(
+        [set_from(*source) for source in args.sources],
+        ignore_index=True
+    )
+    df.to_csv(args.out)
