@@ -21,7 +21,7 @@ def set_from(path: str, protected_label: str, expected_proportion: float) -> pd.
         # assume prompt is filename of csv
         'prompt': [re.sub(r'\.csv$', '', os.path.basename(path))] * len(df),
         'score': scores,
-        'label': labels,
+        'label_value': labels,
         'gender': df['labels_human']
     })
 
@@ -40,14 +40,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser('imagine_set',
          formatter_class=argparse.RawDescriptionHelpFormatter,
          description='''
-Prepare dataset to evaluate Midjourney\'s `imagine`.
+Prepare dataset to evaluate Midjourney\'s `imagine` with Aequitas.
 
 Creates a CSV file with rows sorted so that protected individuals appear first
 for each prompt and columns as follows.
 
 - id: integer for individual 0 to n,
 - score: 1 if generated individual is in protected group, 0 if not
-- label: 1 for first `expected_proportion`% of rows for each prompt, then equal to score
+- label_value: 1 for first `expected_proportion`% of rows for each prompt, then equal to score
 - gender: human-labelled gender''')
     parser.add_argument('sources', type=datasource, nargs='+',
         help='Data source in the form of `souce_file:protected_label:expected_proportion`'
@@ -59,4 +59,4 @@ for each prompt and columns as follows.
         [set_from(*source) for source in args.sources],
         ignore_index=True
     )
-    df.to_csv(args.out)
+    df.to_csv(args.out, index_label='entity_id')
