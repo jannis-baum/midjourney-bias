@@ -8,7 +8,7 @@ body {
 div { box-sizing: border-box }
 
 #left, #right {
-    padding: 2rem;
+    padding: 3rem;
     position: fixed;
     display: flex;
     flex-direction: column;
