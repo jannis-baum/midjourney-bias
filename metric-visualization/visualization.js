@@ -1,11 +1,16 @@
 new p5((sketch) => {
     const w = window.innerWidth;
     const h = window.innerHeight;
+    const spacer = 15;
 
-    const radius = Math.min(w, h) / 4;
+    const radius = (w*2/3 - spacer * 3)/4
     const orbits = 10;
     const entityDist = radius/orbits;
-    const entitySize = 15;
+    const entitySize = entityDist * 0.75;
+    const xPos = spacer + radius;
+    const yPos = xPos;
+    const xNeg = 2*spacer + 3*radius;
+    const yNeg = yPos;
     
     const noiseScalar = 15;
     const noiseSpeed = 0.05
@@ -13,12 +18,10 @@ new p5((sketch) => {
     const colorPos = '#a8d2e7';
     const colorNeg = '#ff8880';
     const colorBar = '#fcde71'
-    
-    const spacer = 15;
 
-    const entityLocations = (callback) => {
+    const entityOffsets = (callback) => {
         let i = 0;
-        for (let r = 0; r <= radius; r += entityDist) {
+        for (let r = 0; r <= radius - entityDist; r += entityDist) {
             step = Math.PI * 2 / Math.floor(Math.PI * 2 * r / entityDist)
             for (let theta = 0; theta + step/2 < Math.PI * 2; theta += step) {
                 i++;
@@ -27,11 +30,11 @@ new p5((sketch) => {
         }
     }
     let n = 0;
-    entityLocations(() => n += 1);
+    entityOffsets(() => n += 1);
 
     const drawEntities = (x, y, maxCount, posCount) => {
         sketch.noStroke();
-        entityLocations((r, theta, i) => {
+        entityOffsets((r, theta, i) => {
             if (i >= maxCount) return;
             sketch.fill(i >= posCount ? colorNeg : colorPos);
             sketch.circle(
@@ -60,12 +63,13 @@ new p5((sketch) => {
     sketch.setup = () => {
         sketch.createCanvas(w, h);
 
+        const sliderY = yPos + spacer * 2 + radius
         sliderTruth = sketch.createSlider(1, 1000, 500);
-        sliderTruth.position(spacer, spacer);
+        sliderTruth.position(spacer, sliderY);
         sliderPredN = sketch.createSlider(1, 1000, 1000);
-        sliderPredN.position(spacer, spacer * 3);
+        sliderPredN.position(spacer, sliderY + spacer * 2);
         sliderPredP = sketch.createSlider(1, 1000, 1000);
-        sliderPredP.position(spacer, spacer * 5);
+        sliderPredP.position(spacer, sliderY + spacer * 4);
 
         sketch.frameRate(30);
     }
@@ -79,7 +83,9 @@ new p5((sketch) => {
 
     let noiseOffset = 0;
     sketch.draw = () => {
-        sketch.background('white')
+        sketch.background('white');
+        sketch.fill('#ccc');
+        sketch.rect(w*2/3, 0, w/3, h);
 
         labelSlider(sliderTruth, 'Labeled positive rate')
         labelSlider(sliderPredP, 'Rate of correct predictions for positive labels')
@@ -108,11 +114,11 @@ new p5((sketch) => {
 
         sketch.noStroke();
         sketch.fill(colorPos + '33');
-        sketch.circle(w/2 - w/5, h/2, (radius + entityDist) * 2);
-        drawEntities(w/2 - w/5, h/2, labelPos, truePos);
+        sketch.circle(xPos, yPos, radius * 2);
+        drawEntities(xPos, yPos, labelPos, truePos);
         sketch.fill(colorNeg + '33');
-        sketch.circle(w/2 + w/5, h/2, (radius + entityDist) * 2);
-        drawEntities(w/2 + w/5, h/2, labelNeg, falsePos);
+        sketch.circle(xNeg, yNeg, radius * 2);
+        drawEntities(xNeg, yNeg, labelNeg, falsePos);
         noiseOffset += noiseSpeed;
     }
 }, 'canvas');
