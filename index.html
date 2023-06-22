@@ -9,10 +9,19 @@
         <div id="left">
             <h1 class="flex-none">Population</h1>
             <div id="canvas-population" class="flex-1"></div>
-            <div>
-                <input id="sliderTruth" type="range" min="1" max="1000" step="1"  value="500" oninput="updateValues()">
-                <input id="sliderPredP" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
-                <input id="sliderPredN" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
+            <div id="population-control">
+                <div>
+                    <input id="sliderPredP" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
+                    <p>Correct predictions of positive labels</p>
+                </div>
+                <div>
+                    <input id="sliderTruth" type="range" min="1" max="1000" step="1"  value="500" oninput="updateValues()">
+                    <p>Proportion of positive labels</p>
+                </div>
+                <div>
+                    <input id="sliderPredN" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
+                    <p>Correct predictions of negative labels</p>
+                </div>
             </div>
         </div>
         <div id="right">

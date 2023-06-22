@@ -31,6 +31,14 @@ div {
     color: white;
 }
 
+#population-control {
+    display: flex;
+    
+}
+#population-control > div { flex: 1 1 auto }
+#population-control > * + * { margin-left: 4rem }
+input[type="range"] { width: 100% }
+
 .flex-1 { flex: 1 1 auto }
 .flex-none { flex: none }
 
