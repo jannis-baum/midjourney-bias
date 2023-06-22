@@ -7,11 +7,11 @@
 
     <body style="margin: 0; padding: 0">
         <div id="left">
-            <h1 class="flex-none">Population</h1>
+            <h1 class="flex-none">Labels & predictions</h1>
             <div id="canvas-population" class="flex-1"></div>
             <div id="population-control">
                 <div>
-                    <input id="sliderPredP" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
+                    <input id="sliderPredP" type="range" min="1" max="1000" step="1"  value="900" oninput="updateValues()">
                     <p>Correct predictions of positive labels</p>
                 </div>
                 <div>
@@ -19,17 +19,21 @@
                     <p>Proportion of positive labels</p>
                 </div>
                 <div>
-                    <input id="sliderPredN" type="range" min="1" max="1000" step="1"  value="1000" oninput="updateValues()">
+                    <input id="sliderPredN" type="range" min="1" max="1000" step="1"  value="900" oninput="updateValues()">
                     <p>Correct predictions of negative labels</p>
                 </div>
             </div>
         </div>
         <div id="right">
-            <h1 class="flex-none">Aequitas metrics</h1>
+            <h1 class="flex-none">Bias metrics</h1>
             <div id="canvas-metrics" class="flex-1">
+                <p>False Discovery Rate</p>
                 <div id="canvas-bar-fdr" class="bar"></div>
+                <p>False Omission Rate</p>
                 <div id="canvas-bar-for" class="bar"></div>
+                <p>False Positive Rate</p>
                 <div id="canvas-bar-fpr" class="bar"></div>
+                <p>False Negative Rate</p>
                 <div id="canvas-bar-fnr" class="bar"></div>
             </div>
         </div>
