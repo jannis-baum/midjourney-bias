@@ -71,19 +71,28 @@ new p5((sketch) => {
         labelSlider(sliderPredP, 'Rate of correct predictions for positive labels')
         labelSlider(sliderPredN, 'Rate of correct predictions for negative labels')
 
-        const labelPos = n * (sliderTruth.value() / 1000)
-        const truePos = labelPos * (sliderPredP.value() / 1000)
+        const labelPos = n * (sliderTruth.value() / 1000);
+        const truePos = labelPos * (sliderPredP.value() / 1000);
+        const falseNeg = labelPos - truePos;
 
-        const labelNeg = n * (1 - sliderTruth.value() / 1000)
-        const falseNeg = labelNeg * (1 -sliderPredN.value() / 1000)
-        console.log(truePos, falseNeg);
+        const labelNeg = n * (1 - sliderTruth.value() / 1000);
+        const falsePos = labelNeg * (1 -sliderPredN.value() / 1000);
+        const trueNeg = labelNeg - falsePos;
+
+        const predPos = falsePos + truePos;
+        const predNeg = falseNeg + trueNeg;
+
+        const FDR = falsePos / predPos;
+        const FOR = falseNeg / predNeg;
+        const FPR = falsePos / labelNeg;
+        const FNR = falseNeg / labelPos;
 
         sketch.fill(colorPos + '33');
         sketch.circle(w/2 - w/5, h/2, (radius + entityDist) * 2);
         drawEntities(w/2 - w/5, h/2, labelPos, truePos);
         sketch.fill(colorNeg + '33');
         sketch.circle(w/2 + w/5, h/2, (radius + entityDist) * 2);
-        drawEntities(w/2 + w/5, h/2, labelNeg, falseNeg);
+        drawEntities(w/2 + w/5, h/2, labelNeg, falsePos);
         noiseOffset += noiseSpeed;
     }
 }, 'canvas');
