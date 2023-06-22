@@ -11,6 +11,8 @@ new p5((sketch) => {
     const yPos = xPos;
     const xNeg = 2*spacer + 3*radius;
     const yNeg = yPos;
+    const xBars = w*2/3 + spacer;
+    const wBars = w/3 - 2 * spacer;
     
     const noiseScalar = 15;
     const noiseSpeed = 0.05
@@ -48,12 +50,12 @@ new p5((sketch) => {
     const drawBar = (x, y, w, h, fill, label) => {
         sketch.noStroke();
         sketch.fill(colorBar);
-        sketch.rect(x, y + h * (1 - fill), w, h * fill);
+        sketch.rect(x, y, w * fill, h);
         sketch.stroke('black');
         sketch.noFill();
         sketch.rect(x, y, w, h);
-        sketch.textAlign(sketch.CENTER);
-        sketch.text(label, x, y + h + spacer, w);
+        sketch.textAlign(sketch.LEFT, sketch.BOTTOM);
+        sketch.text(label, x, y - spacer, w);
     }
 
     let sliderTruth;
@@ -107,10 +109,10 @@ new p5((sketch) => {
         const FPR = falsePos / labelNeg;
         const FNR = falseNeg / labelPos;
 
-        drawBar(spacer, 200, 100, 200, FDR, 'False Discovery Rate');
-        drawBar(100 + 2 * spacer, 200, 100, 200, FOR, 'False Omission Rate');
-        drawBar(200 + 3 * spacer, 200, 100, 200, FPR, 'False Positive Rate');
-        drawBar(300 + 4 * spacer, 200, 100, 200, FNR, 'False Negative Rate');
+        drawBar(xBars, spacer, wBars, 200, FDR, 'False Discovery Rate');
+        drawBar(xBars, 200 + 2*spacer, wBars, 200, FOR, 'False Omission Rate');
+        drawBar(xBars, 2*200 + 3*spacer, wBars, 200, FPR, 'False Positive Rate');
+        drawBar(xBars, 3*200 + 4*spacer, wBars, 200, FNR, 'False Negative Rate');
 
         sketch.noStroke();
         sketch.fill(colorPos + '33');
