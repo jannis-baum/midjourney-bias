@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-import os
-import re
 
 import pandas as pd
+
+from utils import prompt_from
 
 def set_from(path: str, protected_label: str, expected_proportion: float) -> pd.DataFrame:
     df = pd.read_csv(path)
@@ -19,7 +19,7 @@ def set_from(path: str, protected_label: str, expected_proportion: float) -> pd.
     labels = [1] * expected_protected + scores[expected_protected:]
     return pd.DataFrame({
         # assume prompt is filename of csv
-        'prompt': [re.sub(r'\.csv$', '', os.path.basename(path))] * len(df),
+        'prompt': [prompt_from(path)] * len(df),
         'score': scores,
         'label_value': labels,
         'gender': df['labels_human']
