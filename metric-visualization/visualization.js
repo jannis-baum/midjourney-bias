@@ -1,4 +1,12 @@
 // -----------------------------------------------------------------------------
+// initial parameters from query -----------------------------------------------
+
+const urlParams = new URLSearchParams(window.location.search);
+document.getElementById('sliderTruth').value = urlParams.get('t') ?? 500;
+document.getElementById('sliderPredP').value = urlParams.get('p') ?? 1000;
+document.getElementById('sliderPredN').value = urlParams.get('n') ?? 1000;
+
+// -----------------------------------------------------------------------------
 // metrics & population based on sliders ---------------------------------------
 
 let labelPos, labelNeg;
